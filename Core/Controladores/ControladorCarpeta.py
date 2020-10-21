@@ -3,6 +3,7 @@ import shutil
 from glob import glob 
 import os
 import os.path
+import zipfile
 #from Modelos.Carpeta import Carpeta
 
 class ControladorCarpeta:
@@ -16,6 +17,8 @@ class ControladorCarpeta:
     
     
     """metodo que copia y convierte el archivo con extension .T02 a .OBS en la misma carpeta """
+    #parametros: nombreArchivo(ruta completa incluyendo el nombre del archivo con la extension)
+    #nombre (ruta del archivo excepto la extension)
     def OBS(self,nombreArchivo,nombre):
             shutil.copy2(nombreArchivo,nombre+str('.OBS'))
             #print("El archivo '{}' se llama '{}' y tiene la extensión '{}'".format(
@@ -46,7 +49,14 @@ class ControladorCarpeta:
             self.NAV(fname,nombre)
             self.MET(fname,nombre)
 
-
+            
+    #metodo que comprime los archivos .OBS y los copia a la misma carpeta donde estan
+    def comprimirArchivosOBS(self,carpeta):
+        for fname in glob(str(carpeta.ruta)+'/*.OBS'):
+            nombre,extension=os.path.splitext(fname)
+            jungle_zip = zipfile.ZipFile(nombre+str('.zip'), 'w')
+            jungle_zip.write(fname, compress_type=zipfile.ZIP_DEFLATED)
+            jungle_zip.close()
 
 
         

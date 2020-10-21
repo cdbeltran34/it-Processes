@@ -1,76 +1,45 @@
 from Core.Modelos.Carpeta import Carpeta
 from Core.Controladores.ControladorCarpeta import ControladorCarpeta
 from Core.Controladores.ControladorSistema import Sistema
-from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
-from tkinter import filedialog
-import os
+import argparse
 
+#Argumentos
+parser = argparse.ArgumentParser(
+    description='Esto es un programa que copia y cambia la extension de los archivos .T02 a .obs, .nav y .met ',
+)
+parser.add_argument('-o','--origen',metavar='',help='direccion carpeta origen entre comillas dobles')
+group =parser.add_mutually_exclusive_group()
+group.add_argument('-r','--ram',action='store_true',help='Ram del equipo')
+group.add_argument('-m','--ocu',action='store_true',help='Ram ocupada del equipo')
+group.add_argument('-d','--disp',action='store_true',help='Ram disponible del equipo')
+group.add_argument('-c','--cpu',action='store_true',help='cpu del equipo')
+args=parser.parse_args()
+#"./prueba/Manizales-49"
 
-#imprimir los archivos de una carpeta
-#con el /
+#procesos
+carpeta=Carpeta(args.origen) 
+carpeta2=Carpeta("./prueba/MnaizalesGPS")
+controlador=ControladorCarpeta()
+controlador.copiarArchivos(carpeta,carpeta2)
+controlador.convertirArchivos(carpeta2)
+controlador.comprimirArchivosOBS(carpeta2)
 
-class Aplicacion():
-    def __init__(self):
-        self.raiz = Tk()
-        self.raiz.geometry('350x200')
-        self.raiz.configure(bg = 'beige')
-        self.raiz.title('IT-PROCESSES')
-        self.carpetaOrigen=''
-        self.sistema=Sistema()
-        
-        #botonoes
-        self.btn1=Button(self.raiz,text='Seleccionar Carpeta',command=self.explorarCarpeta)
-        self.btn1.grid(column=0,row=2)
-        self.bnt2=Button(self.raiz,text='Procesar',command=self.procesar)
-        self.bnt2.grid(column=1,row=2)
-        self.bnt3=Button(self.raiz,text='SO info',command=self.mostrarInfo)
-        self.bnt3.grid(column=2,row=2)
+#informacion
+sistema=  Sistema()
+if args.ram:
+    print('Ram: {}'.format(sistema.mostrarRam())) 
+elif args.ocu:
+    print('Ram Ocupada: {}'.format(sistema.mostrarRamOcupada())) 
+elif args.disp:
+    print('Ram disp: {}'.format(sistema.mostrarRamDisponible())) 
+elif args.cpu:
+    print('Cpu: {}'.format(sistema.mostrarCpu())) 
 
-
-        #labels
-        self.lbl1=Label(self.raiz,text="IT PROCESSES")
-        self.lbl1.grid(column=1,row=0)
-        self.lbl2=Label(self.raiz,text="Carpeta Origen")
-        self.lbl2.grid(column=0,row=1)
-        
-
-        #textArea
-        self.T = Text(self.raiz, height = 5, width = 20)
-        self.T.grid(column=1,row=3)
         
 
-        self.raiz.mainloop()
-    #metodo para abrir el explorador de archivos y seleccionar la capeta origen de los archivos
-    def explorarCarpeta(self):
-        directorio=filedialog.askdirectory()
-        self.carpetaOrigen=directorio
         
 
-    #metodo para copiar y convertir los archivos T02 a la carpeta ManizalesGPS
-    def procesar(self):
-        carpeta=Carpeta(self.carpetaOrigen) 
-        carpeta2=Carpeta("./prueba/MnaizalesGPS")
-        controlador=ControladorCarpeta()
-        controlador.copiarArchivos(carpeta,carpeta2)
-        controlador.convertirArchivos(carpeta2)
-        messagebox.showinfo(message="Procesamiento Terminado", title="Título")
-
-    #metodo para mostrar informacion del SO
-    def mostrarInfo(self):
-        info=self.sistema.mostrarRam()+"\n"
-        info +=self.sistema.mostrarRamOcupada()+"\n"
-        info +=self.sistema.mostrarRamDisponible()+"\n"
-        info += self.sistema.mostrarCpu()+"\n"
-        self.T.insert(END, info)
-
-def main():
-    mi_app = Aplicacion()
-    return 0
-
-if __name__ == '__main__':
-    main()
+    
 
 
 
