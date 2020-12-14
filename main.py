@@ -11,13 +11,18 @@ from threading import Thread
 import json
 import traceback
 from datetime import datetime
+from configparser import ConfigParser
+import configparser
 
+#config file
+parser = ConfigParser()
+parser.read('config.ini')
 
-
-carpeta=Carpeta("./prueba/Manizales-49") 
-carpeta2=Carpeta("./prueba/MnaizalesGPS")
+carpeta=Carpeta(parser.get('controller','source')) 
+carpeta2=Carpeta(parser.get('controller','destination'))
 controlador=ControladorCarpeta()
 sistema=  Sistema()
+
 
 
 
@@ -25,9 +30,11 @@ sistema=  Sistema()
 #metodo para crear el archivo log en formato json
 #parametro= dict(objeto diccionario con mensaje,fecha actual)
 def logging(dict):
-    loggingsFile='log.json'
+    loggingsFile=parser.get('log','file')
     with open(loggingsFile,'w')as f:
         json.dump(dict,f,indent=4)
+
+    
 #metodo para generar fecha y hora
 #retorna en formato UTC la fecha y hora del proceso
 def fecha():
@@ -87,7 +94,7 @@ def recibirMensaje():
     conn.set_listener('', MyListener(conn))
     conn.subscribe(destination='/queue/hilo1', id=1, ack='auto')
     print("Waiting for messages...")
-    time.sleep(100)
+    time.sleep(5)
     
     #conn.disconnect()
 
