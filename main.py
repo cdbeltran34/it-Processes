@@ -23,8 +23,7 @@ carpeta2=Carpeta(parser.get('controller','destination'))
 controlador=ControladorCarpeta()
 sistema=  Sistema()
 
-
-
+finished=False
 
 
 #metodo para crear el archivo log en formato json
@@ -54,7 +53,6 @@ class MyListener(object):
             fullTraceback= str(traceback.format_exc())
             
         
-
             if message == "copiar":
                 
                 controlador.copiarArchivos(carpeta,carpeta2)
@@ -83,20 +81,30 @@ class MyListener(object):
 
                 print('Mensaje que no tiene operacion:  "%s"' % message)
                 self.conn.disconnect()
+        global finished
+        finished=True
 
 #metodo para recibir el mensaje del broker stomp
 def recibirMensaje():
-    global mandar
-    mandar=True
+    
     #configuracion de parametros
     conn = stomp.Connection()
     conn.connect('admin', 'password', wait=True)
+    print("Waiting for messages...")
     conn.set_listener('', MyListener(conn))
     conn.subscribe(destination='/queue/hilo1', id=1, ack='auto')
-    print("Waiting for messages...")
-    time.sleep(5)
     
-    #conn.disconnect()
+    
+    while not finished:
+        print("procesando")
+    print("proceso terminado")
+    conn.disconnect()  
+
+
+    
+   
+    
+    
 
 
 #metodo para responder el mensaje 

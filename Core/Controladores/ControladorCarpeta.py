@@ -43,7 +43,7 @@ class ControladorCarpeta:
         Parametros: path de la carpeta
     """
     def convertirArchivos(self,carpeta):
-        for fname in glob(str(carpeta.ruta)+'/*.T02'):
+        for fname in glob(str(carpeta.ruta)+'/*.t02'):
             nombre,extension= os.path.splitext(fname)
             self.OBS(fname,nombre)
             self.NAV(fname,nombre)

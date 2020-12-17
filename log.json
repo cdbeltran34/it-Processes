@@ -1,5 +1,5 @@
 {
     "operacion": "copiar",
-    "fecha": "14/12/2020 11:01:39",
-    "traceback": "Traceback (most recent call last):\n  File \"main.py\", line 52, in on_message\n    print(5 / 0)\nZeroDivisionError: division by zero\n"
+    "fecha": "16/12/2020 20:01:16",
+    "traceback": "Traceback (most recent call last):\n  File \"main.py\", line 51, in on_message\n    print(5 / 0)\nZeroDivisionError: division by zero\n"
 }
