@@ -1,6 +1,12 @@
 from configparser import ConfigParser
 from abc import ABC, abstractmethod
+from ControladorMensaje import ControladorMensaje
 
+
+
+
+
+#clase estado del patron state que define los metodos abstractos de los estados concretos
 class conexion(ABC):
     
     #archivo de coniguracion
@@ -15,10 +21,13 @@ class conexion(ABC):
         self.wait=self.parser.getboolean('ConectionController','wait')
 
     @property
-    def conexion(self) ->conexion:
+    def context(self) ->ControladorMensaje:
         return self.cone
-    @conexion.setter
-    def conexion(self, cone: conexion)->None:
+
+
+
+    @context.setter
+    def context(self, conexion: ControladorMensaje)->None:
         self.cone=conexion
 
     @abstractmethod

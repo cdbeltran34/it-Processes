@@ -1,5 +1,5 @@
-from conexion import conexion
-
+from EstadoStomp import conexion
+import stomp
 class emisor(conexion):
 
     def enviarMensaje(self)->None:

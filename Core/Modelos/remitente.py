@@ -1,11 +1,37 @@
 import stomp
-from conexion import conexion
+from EstadoStomp import conexion
 import traceback
 from datetime import datetime
 import threading
 from threading import Thread
 from datetime import datetime
 import json
+#para importar desde otras carpetas
+import sys
+sys.path.append("..")
+from Controladores.ControladorCarpeta import ControladorCarpeta
+from Controladores.ControladorSistema import Sistema
+from configparser import ConfigParser
+from Carpeta import Carpeta
+#config file
+parser = ConfigParser()
+parser.read('E:/TRABAJO/it-processes/config.ini')
+
+carpeta=Carpeta(parser.get('controller','source')) 
+carpeta2=Carpeta(parser.get('controller','destination'))
+controlador=ControladorCarpeta()
+sistema=  Sistema()
+
+#metodo para el log json 
+def logging(self,dict):
+    loggingsFile='log.json'
+        
+    with open(loggingsFile,'w')as f:
+        json.dump(dict,f,indent=4)
+
+def fecha(self):
+    return datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+
 
 
 class remitente(conexion):
@@ -15,15 +41,19 @@ class remitente(conexion):
         pass
        
 
-    def logging(self,dict):
-        loggingsFile='log.json'
+    def recibirMensaje(self)->None:
+        #configuracion de parametros
+        conn = stomp.Connection()
+        conn.connect(self.username, self.password, wait=True)
+        print("Waiting for messages...")
+        conn.set_listener('', MyListener(conn))
+        conn.subscribe(destination='/queue/hilo1', id=1, ack='auto')
         
-        with open(loggingsFile,'w')as f:
-            json.dump(dict,f,indent=4)
-
-    def fecha(self):
-        return datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-
+        
+        while not finished:
+            print("procesando")
+        print("proceso terminado")
+        conn.disconnect()  
 
     class MyListener(object):
         def __init__(self, conn):
@@ -42,13 +72,13 @@ class remitente(conexion):
                 if message == "copiar":
                     
                     controlador.copiarArchivos(carpeta,carpeta2)
-                    logging({'operacion': message,'fecha':fecha(),'traceback':fullTraceback})
+                    logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
                 elif message== "convertir":
                     controlador.convertirArchivos(carpeta2)
-                    logging({'operacion': message,'fecha':fecha(),'traceback':fullTraceback})
+                    logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
                 elif message=="comprimir":
                     controlador.comprimirArchivosOBS(carpeta2)
-                    logging({'operacion': message,'fecha':fecha(),'traceback':fullTraceback})
+                    logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
                 elif message=="todo":
                     t1=threading.Thread(target=controlador.copiarArchivos,args=(carpeta,carpeta2,))
                     t2=threading.Thread(target=controlador.convertirArchivos,args=(carpeta2,))
@@ -62,7 +92,7 @@ class remitente(conexion):
                 elif message=="sistema":
                     print('Ram: {},Ram Ocupada: {},Ram disp: {},Cpu: {}'.format(sistema.mostrarRam(),sistema.mostrarRamOcupada()
                     ,sistema.mostrarRamDisponible(),sistema.mostrarCpu()))
-                    logging({'operacion': message,'fecha':fecha(),'traceback':fullTraceback})
+                    logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
                 else:
 
                     print('Mensaje que no tiene operacion:  "%s"' % message)
@@ -72,17 +102,5 @@ class remitente(conexion):
 
 
         
-    def recibirMensaje(self)->None:
-        #configuracion de parametros
-        conn = stomp.Connection()
-        conn.connect(self.username, self.password, wait=True)
-        print("Waiting for messages...")
-        conn.set_listener('', MyListener(conn))
-        conn.subscribe(destination='/queue/hilo1', id=1, ack='auto')
-        
-        
-        while not finished:
-            print("procesando")
-        print("proceso terminado")
-        conn.disconnect()  
+    
             
