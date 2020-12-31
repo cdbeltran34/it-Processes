@@ -15,8 +15,8 @@ class ControladorMensaje(object):
         self._Estado.conexion=self
 
 
-
-    def recibirMensaje(self,estado):
+    #metodos propios de los estados
+    def recibirMensaje(self):
         self._Estado.recibirMensaje()
 
     def enviarMensaje(self):

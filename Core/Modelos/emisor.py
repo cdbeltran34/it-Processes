@@ -1,4 +1,4 @@
-from EstadoStomp import conexion
+from Core.Modelos.EstadoStomp import conexion
 import stomp
 class emisor(conexion):
 

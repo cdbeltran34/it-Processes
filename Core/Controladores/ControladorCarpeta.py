@@ -10,9 +10,15 @@ class ControladorCarpeta:
     
     """metodo para copiar los archivos de una carpeta a otra
     #parametros: carpetaOrg(carpeta origen),carpetaDest(carpeta destino)"""
+
+    
     def copiarArchivos(self,carpetaOrg,carpetaDest):
         for archivo in carpetaOrg.archivos:
-            shutil.copy2(str(carpetaOrg.ruta)+"/"+archivo.name,str(carpetaDest.ruta)+"/"+archivo.name)
+            (nombreFichero,extension)=os.path.splitext(archivo.name)
+            if(extension==".t02"):
+                shutil.copy2(str(carpetaOrg.ruta)+"/"+nombreFichero+extension,str(carpetaDest.ruta)+"/"+nombreFichero+extension)
+        
+            
 
     
     
