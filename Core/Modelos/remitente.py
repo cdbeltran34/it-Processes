@@ -5,7 +5,7 @@ import traceback
 from datetime import datetime
 import threading
 from threading import Thread
-from datetime import datetime
+
 import json
 #para importar desde otras carpetas
 import sys
@@ -14,15 +14,25 @@ from Core.Controladores.ControladorCarpeta import ControladorCarpeta
 from Core.Controladores.ControladorSistema import Sistema
 from configparser import ConfigParser
 from Core.Modelos.Carpeta import Carpeta
+import glob
 #config file
 parser = ConfigParser()
-parser.read('E:/TRABAJO/it-processes/config.ini')
+parser.read('D:/TRABAJO/it-processes/config.ini')
 
+
+#Instancias
+#D:/TRABAJO/Manizales-49/**/**/RefData.'+datetime.now().strftime('%y')+'/Month.'+datetime.now().strftime('%b')+'/Day.'+datetime.now().strftime('%d')+'/
+#rutaOrigen=glob.glob('D:\TRABAJO\Manizales-49/**/**/RefData.20/Month.Sep/Day.02')
+rutaOrigen=glob.glob('D:/TRABAJO/Manizales-49/**/**/RefData.'+datetime.now().strftime('%y')+'/Month.'+datetime.now().strftime('%b')+'/Day.'+datetime.now().strftime('%d')+'')
+print(rutaOrigen)
+parser.set('controller','source',str(rutaOrigen[0]))
 carpeta=Carpeta(parser.get('controller','source')) 
 carpeta2=Carpeta(parser.get('controller','destination'))
 controlador=ControladorCarpeta()
 sistema=  Sistema()
 finished=False
+
+
 #metodo para el log json 
 def logging(self,dict):
     loggingsFile='log.json'
@@ -44,37 +54,46 @@ class MyListener(object):
                 try:
                     print(5 / 0)
                 except ZeroDivisionError:
+
                     fullTraceback= str(traceback.format_exc())
+                    if  controlador.existe(carpeta):
                     
                 
-                    if message == "copiar":
-                        
-                        controlador.copiarArchivos(carpeta,carpeta2)
-                        logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
-                    elif message== "convertir":
-                        controlador.convertirArchivos(carpeta2)
-                        logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
-                    elif message=="comprimir":
-                        controlador.comprimirArchivosOBS(carpeta2)
-                        logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
-                    elif message=="todo":
-                        t1=threading.Thread(target=controlador.copiarArchivos,args=(carpeta,carpeta2,))
-                        t2=threading.Thread(target=controlador.convertirArchivos,args=(carpeta2,))
-                        t3=threading.Thread(target=controlador.comprimirArchivosOBS,args=(carpeta2,))
-                        t1.start()
-                        t1.join()
-                        t2.start()
-                        t2.join()
-                        t3.start()
-                        t3.join()
-                    elif message=="sistema":
-                        print('Ram: {},Ram Ocupada: {},Ram disp: {},Cpu: {}'.format(sistema.mostrarRam(),sistema.mostrarRamOcupada()
-                        ,sistema.mostrarRamDisponible(),sistema.mostrarCpu()))
-                        logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
-                    else:
+                        if message == "copiar":
+                            
+                            controlador.copiarArchivos(carpeta,carpeta2)
+                            logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
 
-                        print('Mensaje que no tiene operacion:  "%s"' % message)
-                        self.conn.disconnect()
+                        elif message== "convertir":
+                            controlador.convertirArchivos(carpeta2)
+                            logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
+
+                        elif message=="comprimir":
+                            controlador.comprimirArchivosOBS(carpeta2)
+                            logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
+
+                        elif message=="todo":
+                            t1=threading.Thread(target=controlador.copiarArchivos,args=(carpeta,carpeta2,))
+                            t2=threading.Thread(target=controlador.convertirArchivos,args=(carpeta2,))
+                            t3=threading.Thread(target=controlador.comprimirArchivosOBS,args=(carpeta2,))
+                            t1.start()
+                            t1.join()
+                            t2.start()
+                            t2.join()
+                            t3.start()
+                            t3.join()
+
+                        elif message=="sistema":
+                            print('Ram: {},Ram Ocupada: {},Ram disp: {},Cpu: {}'.format(sistema.mostrarRam(),sistema.mostrarRamOcupada()
+                            ,sistema.mostrarRamDisponible(),sistema.mostrarCpu()))
+                            logging(self,{'operacion': message,'fecha':fecha(self),'traceback':fullTraceback})
+                        else:
+
+                            print('Mensaje que no tiene operacion:  "%s"' % message)
+                            self.conn.disconnect()
+                    else:
+                        print("Carpeta  de origen no econtrada")
+                        #print(carpeta.ruta)
                 global finished
                 finished=True
 

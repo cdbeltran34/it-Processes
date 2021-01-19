@@ -64,6 +64,11 @@ class ControladorCarpeta:
             jungle_zip.write(fname, compress_type=zipfile.ZIP_DEFLATED)
             jungle_zip.close()
 
+    #metodo que retorna True si encuentra la ruta y False en caso contrario
+    def existe(self,carpeta):
+        print(carpeta.ruta)
+        return os.path.isdir(carpeta.ruta)
+
 
         
 

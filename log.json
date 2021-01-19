@@ -1,5 +1,5 @@
 {
     "operacion": "copiar",
-    "fecha": "30/12/2020 17:02:47",
-    "traceback": "Traceback (most recent call last):\n  File \"E:\\TRABAJO\\it-processes\\Core\\Modelos\\remitente.py\", line 45, in on_message\n    print(5 / 0)\nZeroDivisionError: division by zero\n"
+    "fecha": "19/01/2021 16:56:32",
+    "traceback": "Traceback (most recent call last):\n  File \"D:\\TRABAJO\\it-Processes\\Core\\Modelos\\remitente.py\", line 55, in on_message\n    print(5 / 0)\nZeroDivisionError: division by zero\n"
 }

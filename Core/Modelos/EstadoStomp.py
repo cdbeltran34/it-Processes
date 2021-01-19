@@ -23,7 +23,7 @@ class conexion(ABC):
     
     #archivo de coniguracion
     parser=ConfigParser()
-    parser.read('E:/TRABAJO/it-processes/config.ini')
+    parser.read('D:/TRABAJO/it-processes/config.ini')
 
     
     def __init__(self):
@@ -31,21 +31,7 @@ class conexion(ABC):
         self.username=self.parser.get('ConectionController','username')
         self.password=self.parser.get('ConectionController','password')
         self.wait=self.parser.getboolean('ConectionController','wait')
-"""
-    @property
-    def context(self) ->ControladorMensaje:
-        return self.cone
 
-
-
-    @context.setter
-    def context(self, conexion: ControladorMensaje)->None:
-        self.cone=conexion
-
-    @abstractmethod
-    def cambiarEstado(self):
-        pass
-"""
     #metodos abtractos del la clase estado
     
     
