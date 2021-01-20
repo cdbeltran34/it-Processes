@@ -2,7 +2,7 @@ import stomp
 
 from Core.Modelos.EstadoStomp import conexion
 import traceback
-from datetime import datetime
+from datetime import datetime,timedelta
 import threading
 from threading import Thread
 
@@ -20,10 +20,12 @@ parser = ConfigParser()
 parser.read('D:/TRABAJO/it-processes/config.ini')
 
 
+
 #Instancias
 #D:/TRABAJO/Manizales-49/**/**/RefData.'+datetime.now().strftime('%y')+'/Month.'+datetime.now().strftime('%b')+'/Day.'+datetime.now().strftime('%d')+'/
 #rutaOrigen=glob.glob('D:\TRABAJO\Manizales-49/**/**/RefData.20/Month.Sep/Day.02')
-rutaOrigen=glob.glob('D:/TRABAJO/Manizales-49/**/**/RefData.'+datetime.now().strftime('%y')+'/Month.'+datetime.now().strftime('%b')+'/Day.'+datetime.now().strftime('%d')+'')
+ayer=datetime.today()+timedelta(days=-1)
+rutaOrigen=glob.glob('D:/TRABAJO/Manizales-49/**/**/RefData.'+ayer.strftime('%y')+'/Month.'+ayer.strftime('%b')+'/Day.'+ayer.strftime('%d')+'')
 print(rutaOrigen)
 parser.set('controller','source',str(rutaOrigen[0]))
 carpeta=Carpeta(parser.get('controller','source')) 
