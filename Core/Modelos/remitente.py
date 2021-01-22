@@ -1,11 +1,11 @@
 import stomp
 
-from Core.Modelos.EstadoStomp import conexion
+
 import traceback
 from datetime import datetime,timedelta
 import threading
 from threading import Thread
-
+from typing import List
 import json
 #para importar desde otras carpetas
 import sys
@@ -14,6 +14,10 @@ from Core.Controladores.ControladorCarpeta import ControladorCarpeta
 from Core.Controladores.ControladorSistema import Sistema
 from configparser import ConfigParser
 from Core.Modelos.Carpeta import Carpeta
+from Core.Modelos.ObservadorPublisher import ObservadorPublisher
+from Core.Modelos.SujetoRemitente import SujetoRemitente
+
+from  EstadoStomp import conexion
 import glob
 #config file
 parser = ConfigParser()
@@ -99,16 +103,24 @@ class MyListener(object):
                 global finished
                 finished=True
 
-class remitente(conexion):
-    
-    
-    
+class remitente(conexion,SujetoRemitente):
+    estado:int=None
+    observadores:List[ObservadorPublisher]=[]
 
+    def suscribir(self,observador:ObservadorPublisher)->None:
+        self.observadores.append(observador)
 
+    def desuscribir(self,observador:ObservadorPublisher)->None:
+        self.observadores.remove(observador)
+
+    def notificar(self)->None:
+        for observador in self.observadores:
+            observador.actualizar(self)
+            
     def enviarMensaje(self)->None:
         pass
        
-
+    #logica del negocio
     def recibirMensaje(self)->None:
         #configuracion de parametros
         conn = stomp.Connection()
@@ -116,13 +128,14 @@ class remitente(conexion):
         print("Waiting for messages...")
         conn.set_listener('', MyListener(conn))
         conn.subscribe(destination='/queue/hilo1', id=1, ack='auto')
-        
-        
+                
         while not finished:
             #print("procesando")
             pass
         print("proceso terminado")
-        conn.disconnect()  
+        conn.disconnect()
+        self.estado=1
+        self.notificar()  
 
     
 
