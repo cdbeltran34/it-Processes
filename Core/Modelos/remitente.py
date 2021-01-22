@@ -1,3 +1,4 @@
+from __future__ import annotations
 import stomp
 
 
@@ -14,10 +15,10 @@ from Core.Controladores.ControladorCarpeta import ControladorCarpeta
 from Core.Controladores.ControladorSistema import Sistema
 from configparser import ConfigParser
 from Core.Modelos.Carpeta import Carpeta
-from Core.Modelos.ObservadorPublisher import ObservadorPublisher
-from Core.Modelos.SujetoRemitente import SujetoRemitente
+from Core.Modelos.interfacesObserver import ObservadorPublisher
+from Core.Modelos.interfacesObserver import SujetoRemitente
 
-from  EstadoStomp import conexion
+from  Core.Modelos.EstadoStomp import conexion
 import glob
 #config file
 parser = ConfigParser()

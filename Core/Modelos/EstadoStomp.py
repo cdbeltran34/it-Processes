@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from configparser import ConfigParser
 from abc import ABC, abstractmethod
-from ControladorMensaje import ControladorMensaje
+from Core.Modelos.ControladorMensaje import ControladorMensaje
 
 
 

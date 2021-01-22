@@ -20,10 +20,13 @@ import configparser
 
 
 
-    
-controlador= ControladorMensaje(remitente())
+receptor=remitente()
+emisor= emisor()
+receptor.suscribir(emisor)   
+controlador= ControladorMensaje(receptor)
+
 controlador.recibirMensaje()
-controlador.cambiarEstado(emisor())
+controlador.cambiarEstado(emisor)
 controlador.enviarMensaje()
 
                    

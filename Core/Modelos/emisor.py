@@ -1,8 +1,8 @@
 
 import sys
-from EstadoStomp import conexion
-from ObservadorPublisher import ObservadorPublisher
-from SujetoRemitente import SujetoRemitente
+from Core.Modelos.EstadoStomp import conexion
+from Core.Modelos.interfacesObserver import ObservadorPublisher
+from Core.Modelos.interfacesObserver import SujetoRemitente
 import stomp
 class emisor(conexion,ObservadorPublisher):
 
@@ -17,6 +17,7 @@ class emisor(conexion,ObservadorPublisher):
 
     def actualizar(self,sujeto:SujetoRemitente)->None:
         if sujeto.estado==1:
+            print("el estado es 1")
             self.enviarMensaje()
             
         

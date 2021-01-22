@@ -1,7 +1,7 @@
-
+from __future__ import annotations
 
 from abc import ABC,abstractmethod
-from Core.Modelos.ObservadorPublisher import ObservadorPublisher
+
 #interface de la clase remitent que define los metodos abstractos para gestionar los suscriptores
 class SujetoRemitente(ABC):
 
@@ -23,4 +23,13 @@ class SujetoRemitente(ABC):
     @abstractmethod
     def notificar(self)->None:
         """notifica al observador(publisher) de un evento"""
+        pass
+#interface del observador
+
+class ObservadorPublisher(ABC):
+    @abstractmethod
+    def actualizar(self,sujeto:SujetoRemitente)->None:
+        """
+        recibe actualizaciones del sujeto(remitente)
+        """
         pass

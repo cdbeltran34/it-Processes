@@ -39,7 +39,7 @@ def recibirMensaje():
     conn.set_listener('', MyListener(conn))
     conn.subscribe(destination='/queue/hilo2', id=1, ack='auto')
     print("Waiting for messages...")
-    time.sleep(5)
+    #time.sleep(5)
     conn.disconnect()
     
     
