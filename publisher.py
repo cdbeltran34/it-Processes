@@ -3,7 +3,7 @@ import time
 import sys
 import stomp
 import threading
-recibir=False
+finished=False
 
 
 def enviarMensaje():
@@ -26,8 +26,11 @@ class MyListener(object):
         print('received an error "%s"' % message)
     def on_message(self, headers, message):
         print('Mensaje:  "%s"' % message)
-        if message == "apagar":
-            print("entro al if de apagar")
+        if message == "Listo para ejecutar":
+            print("entro al if de ejecutar")
+            enviarMensaje()
+        global finished
+        finished=True
         self.conn.disconnect()
 
 def recibirMensaje():
@@ -40,6 +43,8 @@ def recibirMensaje():
     conn.subscribe(destination='/queue/hilo2', id=1, ack='auto')
     print("Waiting for messages...")
     #time.sleep(5)
+    while not finished:
+        pass
     conn.disconnect()
     
     

@@ -131,7 +131,7 @@ class remitente(conexion,SujetoRemitente):
         conn.subscribe(destination='/queue/hilo1', id=1, ack='auto')
                 
         while not finished:
-            #print("procesando")
+            #ciclo para esperar el mensaje indefinidamente
             pass
         print("proceso terminado")
         conn.disconnect()

@@ -22,12 +22,13 @@ import configparser
 
 receptor=remitente()
 emisor= emisor()
-receptor.suscribir(emisor)   
+receptor.suscribir(emisor)  
+
 controlador= ControladorMensaje(receptor)
 
 controlador.recibirMensaje()
 controlador.cambiarEstado(emisor)
-controlador.enviarMensaje()
+#controlador.enviarMensaje() esto ya lo notifica con el patron observer
 
                    
 
